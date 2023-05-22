@@ -171,21 +171,25 @@
                                     var log = item.Login;
                                     var rol = item.Role;
                                     var idSociete = item.SocieteID;
+                                    // console.log(t);
                                     if (t == log) {
+                                        var idS = item.SocieteID;
                                         sessionStorage.setItem("q", i);
 
                                         sessionStorage.setItem("socID", idSociete);
-                                        sessionStorage.setItem('admin', 1);
+                                        // sessionStorage.setItem('admin', 1);
                                         sessionStorage.setItem('role', rol);
                                         sessionStorage.setItem('log', log);
 
                                         var code = sessionStorage.getItem("role")
 
-                                        fetch('https://face.activactions.net/api/Employes/Get/' + i)
+                                        fetch('https://face.activactions.net/api/Employes/Get/' + idS)
                                             .then(res => res.json())
                                             .then(data2 => {
 
-                                                // console.log(data2);
+                                                console.log(data2);
+                                                console.log(i);
+                                                
 
                                                 for (let item of data2) {
                                                     var emailAd = item.Email;
@@ -213,10 +217,10 @@
                                                                         location.replace('./index.html');
                                                                     }
                                                                 }
+                                                                console.log(data);
 
                                                             });
 
-                                                        location.replace('index.html');
                                                     }
                                                 }
                                             });
