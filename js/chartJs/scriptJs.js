@@ -14,21 +14,14 @@ new Chart("myChart", {
             data: yValues
         }]
     },
-    /*
     options: {
-      legend: {display: false},
+      legend: {display: true},
       title: {
         display: true,
         text: "Cette semaine"
       }
     }
-    */
-    options: {
-        title: {
-            display: true,
-            text: "Cette semaine"
-        }
-    }
+  
 
 });
 

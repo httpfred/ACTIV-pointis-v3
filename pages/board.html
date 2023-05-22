@@ -7,6 +7,66 @@
     integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 
 
+<script>
+    // Ou est stocke Id sessionStorage de societé chez employé
+    // let sessionId = sessionStorage.getItem("emp"),
+    var pointage = document.getElementById('pointage-value'),
+        selectPointage = document.getElementById('option-affichage'),
+        selectPointage2 = document.querySelector('.option-affichage'),
+        sessionId = sessionStorage.getItem('idSociete'),
+
+        entree = 'https://face.activactions.net/api/Pointage/Day/' + sessionId,
+        sorties = 'https://face.activactions.net/api/Pointage/Sortie/' + sessionId,
+        absence = 'https://face.activactions.net/api/Pointage/AbsenceJour/' + sessionId,
+
+        RetardDay = 'https://face.activactions.net/api/Pointage/Late/' + sessionId,
+        retardWeek = 'https://face.activactions.net/api/Pointage/LateWeek/' + sessionId,
+        retardMonth = 'https://face.activactions.net/api/Pointage/LateMounth/' + sessionId,
+
+        utilisateurs = 'https://face.activactions.net/api/Connexion/Get/' + sessionId,
+        employes = 'https://face.activactions.net/api/Employes/Get/' + sessionId,
+
+        url20Jour = 'https://face.activactions.net/api/Pointage/DayTwenty/' + sessionId,
+        pointageDay = "https://face.activactions.net/api/Pointage/DayTwenty/" + sessionId,
+        pointageWeek = "https://face.activactions.net/api/Pointage/Week/" + sessionId,
+        pointageMonth = "https://face.activactions.net/api/Pointage/Mounth/" + sessionId,
+
+        sortiesDay = 'https://face.activactions.net/api/Pointage/Sortie/' + sessionId,
+        sortiesWeek = 'https://face.activactions.net/api/Pointage/SortieSemaine/' + sessionId,
+        sortiesMonth = 'https://face.activactions.net/api/Pointage/SortieMois/' + sessionId,
+
+        entreeDay = 'https://face.activactions.net/api/Pointage/Entree/Day/' + sessionId,
+        entreeWeek = 'https://face.activactions.net/api/Pointage/Entree/week/' + sessionId,
+        entreeMonth = 'https://face.activactions.net/api/Pointage/Entree/Mounth/' + sessionId,
+
+        absenceDay = 'https://face.activactions.net/api/Pointage/AbsenceJour/' + sessionId,
+        absenceWeek = 'https://face.activactions.net/api/Pointage/AbsenceSemaine/' + sessionId,
+        absenceMonth = 'https://face.activactions.net/api/Pointage/AbsenceMois/' + sessionId;
+
+    // Retard ?
+
+    function formatComplet(arg) {
+        let format = new Date(arg),
+            ret;
+        ret = format.toLocaleDateString('fr-fr', { weekday: "long", year: "numeric", month: "short", day: "numeric" });
+        return ret
+    }
+
+    function formatHeure(arg) {
+        if (arg === undefined) {
+            let infos = "Pas encore pointé";
+            return infos;
+        }
+        else {
+            let format = new Date(arg),
+                ret;
+            ret = format.getHours() + "h:" + format.getMinutes() + "mn:" + format.getSeconds() + "s";
+            return ret
+        }
+    }
+
+</script>
+
 
 <div class="">
     <div class="row">
@@ -37,7 +97,24 @@
             style="background-color: whitesmoke;">
             <img src="images/import/clock.png" alt="" width="50px">
             <div class="d-flex flex-column">
-                <span>10</span>
+                <span id="retard">
+                    <script>
+                        var retardInner = '';
+                        var data = {}
+                        fetch(RetardDay)
+                            // fetch('https://face.activactions.net/api/Pointage/SortieSemaine') // Pour la semaine
+                            .then(res => res.json())
+                            .then(data => {
+                                retardInner = data;
+
+                                if (retardInner > 0) {
+                                    document.getElementById('retard').innerHTML = retardInner;
+                                } else {
+                                    document.getElementById('retard').innerHTML = '00';
+                                }
+                            });
+                    </script>
+                </span>
                 <span>Retard</span>
             </div>
         </div>
@@ -45,7 +122,24 @@
             style="background-color: whitesmoke;">
             <img src="images/import/absence.png" alt="" width="50px">
             <div class="d-flex flex-column">
-                <span>10</span>
+                <span id="absence">
+                    <script>
+                        var absenceInner = '';
+                        var data = {}
+                        fetch(absenceDay)
+                            // fetch('https://face.activactions.net/api/Pointage/SortieSemaine') // Pour la semaine
+                            .then(res => res.json())
+                            .then(data => {
+                                absenceInner = data;
+
+                                if (absenceInner > 0) {
+                                    document.getElementById('absence').innerHTML = absenceInner;
+                                } else {
+                                    document.getElementById('absence').innerHTML = '00';
+                                }
+                            });
+                    </script>
+                </span>
                 <span>Absence</span>
             </div>
         </div>
@@ -78,7 +172,24 @@
             </div>
             <div class="d-flex flex-column">
                 <h2>Retards mensuels</h2>
-                <span class="fw-bold">5%</span>
+                <span class="fw-bold" id="retardMens">
+                    <script>
+                        var retardMensInner = '';
+                        var data = {}
+                        fetch(retardMonth)
+                            // fetch('https://face.activactions.net/api/Pointage/SortieSemaine') // Pour la semaine
+                            .then(res => res.json())
+                            .then(data => {
+                                retardMensInner = data;
+
+                                if (retardMensInner > 0) {
+                                    document.getElementById('retardMens').innerHTML = retardMensInner;
+                                } else {
+                                    document.getElementById('retardMens').innerHTML = '00';
+                                }
+                            });
+                    </script>
+                </span>
             </div>
         </div>
 
@@ -96,6 +207,8 @@
 </div>
 
 <script>
+
+    // var chart = document.getElementById('myChartBord').getContest('2d');
 
     var xValuesBord = ["Retard", "Maladies", "Negligeance"];
     var yValuesBord = [50, 30, 20];
@@ -143,13 +256,13 @@
         },
         /*
         options: {
-          legend: {display: false},
-          title: {
-            display: true,
-            text: "Cette semaine"
+         legend: {display: false},
+     title: {
+         display: true,
+     text: "Cette semaine"
           }
         }
-        */
+     */
         options: {
             title: {
                 display: true,

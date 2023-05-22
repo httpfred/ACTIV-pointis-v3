@@ -1,3 +1,78 @@
+<style>
+    .none {
+        display: none;
+    }
+
+    .accordion-body li:hover {
+        cursor: pointer;
+        background-color: whitesmoke;
+    }
+</style>
+
+
+<script>
+    // Ou est stocke Id sessionStorage de societé chez employé
+    // let sessionId = sessionStorage.getItem("emp"),
+    var pointage = document.getElementById('pointage-value'),
+        selectPointage = document.getElementById('option-affichage'),
+        selectPointage2 = document.querySelector('.option-affichage'),
+        sessionId = sessionStorage.getItem('idSociete'),
+
+    entree = 'https://face.activactions.net/api/Pointage/Day/' + sessionId,
+        sorties = 'https://face.activactions.net/api/Pointage/Sortie/' + sessionId,
+        absence = 'https://face.activactions.net/api/Pointage/AbsenceJour/' + sessionId,
+
+        RetardDay = 'https://face.activactions.net/api/Pointage/Late/' + sessionId,
+        retardWeek = 'https://face.activactions.net/api/Pointage/LateWeek/' + sessionId,
+        retardMonth = 'https://face.activactions.net/api/Pointage/LateMounth/' + sessionId,
+
+        utilisateurs = 'https://face.activactions.net/api/Connexion/Get/' + sessionId,
+        employes = 'https://face.activactions.net/api/Employes/Get/' + sessionId,
+
+        url20Jour = 'https://face.activactions.net/api/Pointage/DayTwenty/' + sessionId,
+        pointageDay = "https://face.activactions.net/api/Pointage/DayTwenty/" + sessionId,
+        pointageWeek = "https://face.activactions.net/api/Pointage/Week/" + sessionId,
+        pointageMonth = "https://face.activactions.net/api/Pointage/Mounth/" + sessionId,
+
+        sortiesDay = 'https://face.activactions.net/api/Pointage/Sortie/' + sessionId,
+        sortiesWeek = 'https://face.activactions.net/api/Pointage/SortieSemaine/' + sessionId,
+        sortiesMonth = 'https://face.activactions.net/api/Pointage/SortieMois/' + sessionId,
+
+        entreeDay = 'https://face.activactions.net/api/Pointage/Entree/Day/' + sessionId,
+        entreeWeek = 'https://face.activactions.net/api/Pointage/Entree/week/' + sessionId,
+        entreeMonth = 'https://face.activactions.net/api/Pointage/Entree/Mounth/' + sessionId,
+
+        absenceDay = 'https://face.activactions.net/api/Pointage/AbsenceJour/' + sessionId,
+        absenceWeek = 'https://face.activactions.net/api/Pointage/AbsenceSemaine/' + sessionId,
+        absenceMonth = 'https://face.activactions.net/api/Pointage/AbsenceMois/' + sessionId;
+
+    // Retard ?
+
+    function formatComplet(arg) {
+        let format = new Date(arg),
+            ret;
+        ret = format.toLocaleDateString('fr-fr', { weekday: "long", year: "numeric", month: "short", day: "numeric" });
+        return ret
+    }
+
+    function formatHeure(arg) {
+        if (arg === undefined) {
+            let infos = "Pas encore pointé";
+            return infos;
+        }
+        else {
+            let format = new Date(arg),
+                ret;
+            ret = format.getHours() + "h:" + format.getMinutes() + "mn:" + format.getSeconds() + "s";
+            return ret
+        }
+    }
+
+</script>
+
+
+
+
 <div class="m-3">
     <div class="row m-3">
         <div class="col-9">
@@ -8,8 +83,8 @@
             <label for="search">
                 <i class="fa fa-search" aria-hidden="true"></i>
             </label>
-            <input type="search" class="form-control form-control-dark bg-dark text-light border-0" placeholder="Rechercher"
-                aria-label="Search" id="search">
+            <input type="search" class="form-control form-control-dark bg-dark text-light border-0"
+                placeholder="Rechercher" aria-label="Search" id="search">
         </form>
 
     </div>
@@ -20,14 +95,14 @@
                     <h2 class="accordion-header text-center" id="flush-headingOne">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                            Vu du Jour 19/05/2023
+                            Vu du Jour
                         </button>
                     </h2>
                     <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
                         data-bs-parent="#accordionFlushExample">
                         <ul class="accordion-body">
-                            <li>Semaine</li>
-                            <li>Mois</li>
+                            <li class="" id="semaine" <>Semaine</li>
+                            <li id="mois">Mois</li>
                         </ul>
                     </div>
                 </div>
@@ -48,7 +123,33 @@
                         <th scope="col">SORTIES</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="corps">
+
+                    <script type="text/javascript">
+
+
+
+                        let infos = '';
+                        var data = {}
+
+                        // fetch('https://face.activactions.net/api/Pointage/Week/3367', {
+                        fetch(pointageDay, {
+                            method: 'GET',
+                            headers: {
+                                'content-type': 'application/json'
+                            },
+                            // body: JSON.stringify(data)
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                for (let item of data) {
+                                    // infos += `<tr><td>${item.PointageJour}</td><td>${item.PointageHeureEntree}</td><td>${item.PointageHeureSortie} </td><td>${item.EmployeNom} ${item.EmployePrenom}</td><td>${item.EmployeTelephone}</td></tr>`;
+                                    infos += `<tr><td>${formatComplet(item.PointageJour)}</td><td>${item.EmployeNom} ${item.EmployePrenom}</td><td>${item.EmployeTitre}</td><td>${formatHeure(item.PointageHeureEntree)}</td><td>${formatHeure(item.PointageHeureSortie)}</td></tr>`;
+                                }
+                                document.getElementById('corps').innerHTML = infos;
+                            });
+                    </script>
+                    <!--
                     <tr>
                         <td>Jeudi 18 Mai 2023</td>
                         <td>Serme Mariam</td>
@@ -70,6 +171,7 @@
                         <td>08h20min17s</td>
                         <td>19h00min17s</td>
                     </tr>
+                   -->
 
                     <!--
                     <tr>
@@ -80,8 +182,92 @@
                     </tr>
                     -->
                 </tbody>
+
+                <tbody class="none" id="corpsSemaine">
+
+                    <script type="text/javascript">
+                        let infosSemaines = '';
+                        var data = {}
+
+                        // fetch('https://face.activactions.net/api/Pointage/Week/3367', {
+                        fetch(pointageWeek, {
+                            method: 'GET',
+                            headers: {
+                                'content-type': 'application/json'
+                            },
+                            // body: JSON.stringify(data)
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                for (let item of data) {
+                                    // infos += `<tr><td>${item.PointageJour}</td><td>${item.PointageHeureEntree}</td><td>${item.PointageHeureSortie} </td><td>${item.EmployeNom} ${item.EmployePrenom}</td><td>${item.EmployeTelephone}</td></tr>`;
+                                    infosSemaines += `<tr><td>${formatComplet(item.PointageJour)}</td><td>${item.EmployeNom} ${item.EmployePrenom}</td><td>${item.EmployeTitre}</td><td>${formatHeure(item.PointageHeureEntree)}</td><td>${formatHeure(item.PointageHeureSortie)}</td></tr>`;
+                                }
+                                document.getElementById('corpsSemaines').innerHTML = infosSemaines;
+                            });
+                    </script>
+
+                </tbody>
+                <tbody class="none" id="corpsMois">
+
+                    <script type="text/javascript">
+
+                        let infosMois = '';
+                        var dataMois = {}
+
+                        // fetch('https://face.activactions.net/api/Pointage/Week/3367', {
+                        fetch(pointageMonth, {
+                            method: 'GET',
+                            headers: {
+                                'content-type': 'application/json'
+                            },
+                            // body: JSON.stringify(data)
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                for (let item of data) {
+                                    // infos += `<tr><td>${item.PointageJour}</td><td>${item.PointageHeureEntree}</td><td>${item.PointageHeureSortie} </td><td>${item.EmployeNom} ${item.EmployePrenom}</td><td>${item.EmployeTelephone}</td></tr>`;
+                                    infosMois += `<tr><td>${formatComplet(item.PointageJour)}</td><td>${item.EmployeNom} ${item.EmployePrenom}</td><td>${item.EmployeTitre}</td><td>${formatHeure(item.PointageHeureEntree)}</td><td>${formatHeure(item.PointageHeureSortie)}</td></tr>`;
+                                }
+                                document.getElementById('corpsMois').innerHTML = infosMois;
+                            });
+                    </script>
+
+                </tbody>
             </table>
         </div>
 
     </div>
 </div>
+
+
+<script>
+    var jour = document.getElementById('flush-headingOne'),
+        mois = document.getElementById('mois'),
+        semaine = document.getElementById('semaine'),
+        semaineBlock = document.getElementById('corpsSemaines'),
+        moisBlock = document.getElementById('corpsMois'),
+        jourBlock = document.getElementById('corps');
+
+    mois.addEventListener('click', function () {
+        jourBlock.style.display = 'none';
+        moisBlock.style.display = 'block';
+        semaineBlock.style.display = 'none';
+    });
+
+    semaine.addEventListener('click', function () {
+        jourBlock.style.display = 'none';
+        moisBlock.style.display = 'none';
+        semaineBlock.style.display = 'block';
+    });
+
+    jour.addEventListener('click', function () {
+        jourBlock.style.display = 'block';
+        moisBlock.style.display = 'none';
+        semaineBlock.style.display = 'none';
+    })
+
+
+
+
+</script>
